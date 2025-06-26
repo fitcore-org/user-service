@@ -16,7 +16,7 @@ spring:
     password: admin
 
 server:
-  port: 8080
+  port: 8081
 
 minio:
   url: http://localhost:9000
@@ -29,3 +29,7 @@ logging:
     root: INFO
     org.springframework.web: DEBUG
     com.fitcore: DEBUG
+    org.springframework.amqp: DEBUG
+    org.springframework.amqp.rabbit: DEBUG
+    org.springframework.amqp.rabbit.core: DEBUG
+    org.springframework.amqp.rabbit.connection: DEBUG

@@ -6,12 +6,16 @@ import com.fitcore.users.domain.model.student.StudentPlan
 import com.fitcore.users.domain.port.`in`.student.FindStudentUseCase
 import com.fitcore.users.domain.port.`in`.student.ManageStudentUseCase
 import com.fitcore.users.domain.port.out.student.StudentRepository
+import com.fitcore.users.infrastructure.messaging.producer.UserEventProducer
+import com.fitcore.users.infrastructure.web.mapper.StudentDtoMapper
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 
 @Service
 class StudentService(
-    private val studentRepository: StudentRepository
+    private val studentRepository: StudentRepository,
+    private val userEventProducer: UserEventProducer,
+    private val studentDtoMapper: StudentDtoMapper    
 ) : ManageStudentUseCase, FindStudentUseCase {
     
     override fun registerStudent(
@@ -40,7 +44,13 @@ class StudentService(
         )
         
         // Persistir via repositório
-        return studentRepository.save(student)
+        val savedStudent = studentRepository.save(student)
+
+        // Mapeia para DTO e publica o evento
+        val responseDto = studentDtoMapper.toResponseDto(savedStudent)
+        userEventProducer.publishStudentCreated(responseDto)
+
+        return savedStudent
     }
 
     override fun findAll(): List<Student> {
