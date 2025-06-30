@@ -14,6 +14,8 @@ data class UserId private constructor(val value: UUID) {
                 throw IllegalArgumentException("Invalid user ID format: '$id'") 
             }
         }
+        
+        fun from(id: UUID): UserId = UserId(id)
     }
     
     override fun toString(): String = value.toString() 

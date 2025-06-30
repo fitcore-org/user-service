@@ -3,8 +3,9 @@ package com.fitcore.users.domain.model.student
 import com.fitcore.users.domain.model.common.UserId
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.util.UUID
 
-class Student private constructor(
+class Student internal constructor(
     val id: UserId,
     val name: String,
     val email: String,
@@ -23,6 +24,35 @@ class Student private constructor(
         private val EMAIL_REGEX = Regex("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
         private val PHONE_REGEX = Regex("^\\(\\d{2}\\)\\s\\d{4,5}-\\d{4}$")
         
+        fun fromPersistence(
+            id: UUID,
+            name: String,
+            email: String,
+            cpf: String,
+            birthDate: LocalDate,
+            phone: String,
+            plan: StudentPlan,
+            weight: Double?,
+            height: Int?,
+            active: Boolean,
+            registrationDate: LocalDateTime,
+            lastUpdateDate: LocalDateTime
+        ): Student {
+            return Student(
+                id = UserId.from(id),
+                name = name,
+                email = email,
+                cpf = cpf,
+                birthDate = birthDate,
+                phone = phone,
+                plan = plan,
+                weight = weight,
+                height = height,
+                active = active,
+                registrationDate = registrationDate,
+                lastUpdateDate = lastUpdateDate
+            )
+        }
         fun create(
             name: String,
             email: String,
