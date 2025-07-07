@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/auth
+    url: jdbc:postgresql://postgres:5432/auth
     username: fitcore
     password: fitcorepass
   jpa:
@@ -10,7 +10,7 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
   rabbitmq:
-    host: localhost
+    host: rabbitmq
     port: 5672
     username: admin
     password: admin
@@ -19,7 +19,7 @@ server:
   port: 8081
 
 minio:
-  url: http://localhost:9000
+  url: http://minio:9000
   access-key: minio
   secret-key: minio123
   bucket: fitcore
@@ -33,3 +33,12 @@ logging:
     org.springframework.amqp.rabbit: DEBUG
     org.springframework.amqp.rabbit.core: DEBUG
     org.springframework.amqp.rabbit.connection: DEBUG
+  
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    prometheus:
+      enabled: true

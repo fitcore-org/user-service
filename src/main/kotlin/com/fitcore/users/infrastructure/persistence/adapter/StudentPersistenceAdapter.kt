@@ -37,8 +37,7 @@ class StudentPersistenceAdapter(
     }
     
     override fun findByPlan(plan: StudentPlan): List<Student> {
-        val planType = EnumMappers.toPlanEntity(plan)
-        return studentJpaRepository.findByPlan(planType).map { mapper.toDomain(it) }
+        return studentJpaRepository.findByPlan(plan).map { mapper.toDomain(it) }
     }
     
     override fun findAllActive(): List<Student> {

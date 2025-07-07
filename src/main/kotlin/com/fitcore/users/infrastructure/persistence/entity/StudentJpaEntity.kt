@@ -1,5 +1,6 @@
 package com.fitcore.users.infrastructure.persistence.entity
 
+import com.fitcore.users.domain.model.student.StudentPlan 
 import jakarta.persistence.*
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -28,7 +29,7 @@ class StudentJpaEntity(
     
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    val plan: PlanType,
+    val plan: StudentPlan,
     
     @Column
     val weight: Double?,
@@ -44,8 +45,4 @@ class StudentJpaEntity(
     
     @Column(nullable = false)
     val lastUpdateDate: LocalDateTime
-) {
-    enum class PlanType {
-        BASIC, INTERMEDIATE, PREMIUM
-    }
-}
+)

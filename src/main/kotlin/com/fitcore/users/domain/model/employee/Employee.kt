@@ -3,6 +3,7 @@ package com.fitcore.users.domain.model.employee
 import com.fitcore.users.domain.model.common.UserId
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.util.UUID
 
 class Employee private constructor(
     val id: UserId,
@@ -22,6 +23,36 @@ class Employee private constructor(
         private val CPF_REGEX = Regex("^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$")
         private val EMAIL_REGEX = Regex("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
         private val PHONE_REGEX = Regex("^\\(\\d{2}\\)\\s\\d{4,5}-\\d{4}$")
+        
+        fun fromPersistence(
+            id: UUID,
+            name: String,
+            email: String,
+            cpf: String,
+            birthDate: LocalDate,
+            phone: String,
+            role: Role,
+            active: Boolean,
+            hireDate: LocalDate,
+            terminationDate: LocalDate?,
+            registrationDate: LocalDateTime,
+            lastUpdateDate: LocalDateTime
+        ): Employee {
+            return Employee(
+                id = UserId.from(id),
+                name = name,
+                email = email,
+                cpf = cpf,
+                birthDate = birthDate,
+                phone = phone,
+                role = role,
+                active = active,
+                hireDate = hireDate,
+                terminationDate = terminationDate,
+                registrationDate = registrationDate,
+                lastUpdateDate = lastUpdateDate
+            )
+        }
         
         fun create(
             name: String,

@@ -11,7 +11,7 @@ import com.fitcore.users.infrastructure.web.mapper.StudentDtoMapper
 import org.slf4j.LoggerFactory
 
 @Component
-class UserEventProducer(
+class StudentEventProducer(
     private val rabbitTemplate: RabbitTemplate,
     private val studentDtoMapper: StudentDtoMapper
 ) : StudentEventPublisher {
