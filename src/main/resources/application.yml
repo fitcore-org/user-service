@@ -22,7 +22,8 @@ minio:
   url: http://minio:9000
   access-key: minio
   secret-key: minio123
-  bucket: fitcore
+  bucket: fitcore-users-profile
+  external-url: http://localhost:9000
 
 logging:
   level:

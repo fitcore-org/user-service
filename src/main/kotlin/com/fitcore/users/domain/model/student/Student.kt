@@ -17,7 +17,8 @@ class Student internal constructor(
     val height: Int?,            // Altura em cm (opcional)
     val active: Boolean,
     val registrationDate: LocalDateTime,
-    val lastUpdateDate: LocalDateTime
+    val lastUpdateDate: LocalDateTime,
+    val profileUrl: String?
 ) {
     companion object {
         private val CPF_REGEX = Regex("^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$")
@@ -36,7 +37,8 @@ class Student internal constructor(
             height: Int?,
             active: Boolean,
             registrationDate: LocalDateTime,
-            lastUpdateDate: LocalDateTime
+            lastUpdateDate: LocalDateTime,
+            profileUrl: String? 
         ): Student {
             return Student(
                 id = UserId.from(id),
@@ -50,7 +52,8 @@ class Student internal constructor(
                 height = height,
                 active = active,
                 registrationDate = registrationDate,
-                lastUpdateDate = lastUpdateDate
+                lastUpdateDate = lastUpdateDate,
+                profileUrl = profileUrl
             )
         }
         fun create(
@@ -80,7 +83,6 @@ class Student internal constructor(
             }
             
             val now = LocalDateTime.now()
-            
             return Student(
                 id = UserId.create(),
                 name = name,
@@ -93,9 +95,28 @@ class Student internal constructor(
                 height = height,
                 active = true,
                 registrationDate = now,
-                lastUpdateDate = now
+                lastUpdateDate = now,
+                profileUrl = null 
             )
         }
+    }
+
+    fun withProfileUrl(profileUrl: String?): Student {
+        return Student(
+            id = this.id,
+            name = this.name,
+            email = this.email,
+            cpf = this.cpf,
+            birthDate = this.birthDate,
+            phone = this.phone,
+            plan = this.plan,
+            weight = this.weight,
+            height = this.height,
+            active = this.active,
+            registrationDate = this.registrationDate,
+            lastUpdateDate = this.lastUpdateDate,
+            profileUrl = profileUrl
+        )
     }
     
     fun update(
@@ -132,7 +153,8 @@ class Student internal constructor(
             height = height,
             active = this.active,
             registrationDate = this.registrationDate,
-            lastUpdateDate = LocalDateTime.now()
+            lastUpdateDate = LocalDateTime.now(),
+            profileUrl = this.profileUrl 
         )
     }
     
@@ -160,7 +182,8 @@ class Student internal constructor(
             height = height,
             active = this.active,
             registrationDate = this.registrationDate,
-            lastUpdateDate = LocalDateTime.now()
+            lastUpdateDate = LocalDateTime.now(),
+            profileUrl = this.profileUrl 
         )
     }
     
@@ -189,7 +212,8 @@ class Student internal constructor(
             height = this.height,
             active = false,
             registrationDate = this.registrationDate,
-            lastUpdateDate = LocalDateTime.now()
+            lastUpdateDate = LocalDateTime.now(),
+            profileUrl = this.profileUrl
         )
     }
     
@@ -210,7 +234,8 @@ class Student internal constructor(
             height = this.height,
             active = true,
             registrationDate = this.registrationDate,
-            lastUpdateDate = LocalDateTime.now()
+            lastUpdateDate = LocalDateTime.now(),
+            profileUrl = this.profileUrl
         )
     }
 }

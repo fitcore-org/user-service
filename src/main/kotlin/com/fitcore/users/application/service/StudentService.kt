@@ -97,7 +97,8 @@ class StudentService(
         phone: String, 
         planType: String, 
         weight: Double?, 
-        height: Int?
+        height: Int?,
+        profileUrl: String?
     ): Student {
         val student = findById(id)
         
@@ -108,6 +109,7 @@ class StudentService(
         
         val plan = EnumMappers.toPlanDomain(planType)
         val updatedStudent = student.update(name, email, phone, plan, weight, height)
+        .withProfileUrl(profileUrl)
         return studentRepository.save(updatedStudent)
     }
     

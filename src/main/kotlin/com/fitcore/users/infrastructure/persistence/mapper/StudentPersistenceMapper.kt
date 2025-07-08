@@ -23,7 +23,8 @@ class StudentPersistenceMapper {
             height = domain.height,
             active = domain.active,
             registrationDate = domain.registrationDate,
-            lastUpdateDate = domain.lastUpdateDate
+            lastUpdateDate = domain.lastUpdateDate,
+            profileUrl = domain.profileUrl
         )
     }
     
@@ -40,7 +41,8 @@ class StudentPersistenceMapper {
             height = entity.height,
             active = entity.active,
             registrationDate = entity.registrationDate,
-            lastUpdateDate = entity.lastUpdateDate
+            lastUpdateDate = entity.lastUpdateDate,
+            profileUrl = entity.profileUrl
         )
     }
 }

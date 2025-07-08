@@ -8,6 +8,8 @@ import com.fitcore.users.infrastructure.web.dto.student.StudentRequestDto
 import com.fitcore.users.infrastructure.web.dto.student.StudentResponseDto
 import com.fitcore.users.infrastructure.web.dto.student.StudentUpdateDto
 import com.fitcore.users.infrastructure.web.mapper.StudentDtoMapper
+import org.springframework.web.multipart.MultipartFile
+import com.fitcore.users.infrastructure.service.StorageService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -17,7 +19,8 @@ import org.springframework.web.bind.annotation.*
 class StudentController(
     private val manageStudentUseCase: ManageStudentUseCase,
     private val findStudentUseCase: FindStudentUseCase,
-    private val studentDtoMapper: StudentDtoMapper
+    private val studentDtoMapper: StudentDtoMapper,
+    private val storageService: StorageService
 ) {
     
     @PostMapping
@@ -36,6 +39,105 @@ class StudentController(
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(studentDtoMapper.toResponseDto(student))
+    }
+
+    @PostMapping("/{id}/profile")
+    fun uploadProfile(
+        @PathVariable id: String,
+        @RequestParam("file") file: MultipartFile
+    ): ResponseEntity<StudentResponseDto> {
+        val userId = UserId.of(id)
+        val student = findStudentUseCase.findById(userId)
+            ?: return ResponseEntity.notFound().build()
+
+        // Upload para o MinIO
+        val objectKey = storageService.uploadProfile(id, file)
+
+        // Atualize o campo profileUrl no domínio e persista
+        val savedStudent = manageStudentUseCase.updateStudent(
+            id = userId,
+            name = student.name,
+            email = student.email,
+            phone = student.phone,
+            planType = student.plan.name,
+            weight = student.weight,
+            height = student.height,
+            profileUrl = objectKey 
+        )
+
+        return ResponseEntity.ok(studentDtoMapper.toResponseDto(savedStudent))
+    }
+
+    @PutMapping("/{id}/profile")
+    fun updateProfile(
+        @PathVariable id: String,
+        @RequestParam("file") file: MultipartFile
+    ): ResponseEntity<StudentResponseDto> {
+        val userId = UserId.of(id)
+        val student = findStudentUseCase.findById(userId)
+            ?: return ResponseEntity.notFound().build()
+
+        // Verificar e remover a foto de perfil anterior, se existir
+        student.profileUrl?.let { 
+            storageService.deleteProfile(it)
+        }
+
+        // Upload para o MinIO
+        val objectKey = storageService.uploadProfile(id, file)
+
+        // Atualize o campo profileUrl no domínio
+        val savedStudent = manageStudentUseCase.updateStudent(
+            id = userId,
+            name = student.name,
+            email = student.email,
+            phone = student.phone,
+            planType = student.plan.name,
+            weight = student.weight,
+            height = student.height,
+            profileUrl = objectKey
+        )
+
+        return ResponseEntity.ok(studentDtoMapper.toResponseDto(savedStudent))
+    }
+
+    @DeleteMapping("/{id}/profile")
+    fun deleteProfile(@PathVariable id: String): ResponseEntity<StudentResponseDto> {
+        val userId = UserId.of(id)
+        val student = findStudentUseCase.findById(userId)
+            ?: return ResponseEntity.notFound().build()
+        
+        // Se existe uma foto, exclua-a
+        if (student.profileUrl != null) {
+            storageService.deleteProfile(student.profileUrl)
+            
+            // Atualize o campo profileUrl para null no domínio
+            val savedStudent = manageStudentUseCase.updateStudent(
+                id = userId,
+                name = student.name,
+                email = student.email,
+                phone = student.phone,
+                planType = student.plan.name,
+                weight = student.weight,
+                height = student.height,
+                profileUrl = null // Define como null para remover a referência
+            )
+            
+            return ResponseEntity.ok(studentDtoMapper.toResponseDto(savedStudent))
+        } else {
+            // Se não existe foto, retorne 204 No Content
+            return ResponseEntity.noContent().build()
+        }
+    }
+        
+    @GetMapping("/{id}/profile-url")
+    fun getProfileUrl(@PathVariable id: String): ResponseEntity<Map<String, String>> {
+        val userId = UserId.of(id)
+        val student = findStudentUseCase.findById(userId)
+            ?: return ResponseEntity.notFound().build()
+        val key = student.profileUrl ?: return ResponseEntity.notFound().build()
+        val url = storageService.getPresignedUrl(key)
+        
+        return ResponseEntity.ok(mapOf("profileUrl" to url))
     }
     
     @GetMapping

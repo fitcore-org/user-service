@@ -24,7 +24,8 @@ interface ManageStudentUseCase {
         phone: String,
         planType: String,
         weight: Double?,
-        height: Int?
+        height: Int?,
+        profileUrl: String? = null
     ): Student
     
     fun updatePhysicalData(

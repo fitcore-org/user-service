@@ -16,5 +16,6 @@ data class StudentResponseDto(
     val height: Int?,
     val bmi: Double?,
     val active: Boolean,
-    val registrationDate: LocalDateTime
+    val registrationDate: LocalDateTime,
+    val profileUrl: String?
 )
