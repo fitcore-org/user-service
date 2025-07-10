@@ -91,7 +91,8 @@ class EmployeeService(
         name: String,
         email: String,
         phone: String,
-        roleType: String
+        roleType: String,
+        profileUrl: String? 
     ): Employee {
         val employee = findById(id) ?: throw EmployeeNotFoundException(id.toString())
         
@@ -101,11 +102,11 @@ class EmployeeService(
         }
         
         val role = EnumMappers.toRoleDomain(roleType)
-        val updatedEmployee = employee.update(name, email, phone, role)
+        val updatedEmployee = employee.update(name, email, phone, role).withProfileUrl(profileUrl)
         val savedEmployee = employeeRepository.save(updatedEmployee)
         
         // Publicar evento
-        employeeEventPublisher.publishEmployeeUpdated(savedEmployee)
+        // employeeEventPublisher.publishEmployeeUpdated(savedEmployee)
         
         return savedEmployee
     }

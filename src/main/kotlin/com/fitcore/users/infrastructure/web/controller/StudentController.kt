@@ -10,6 +10,7 @@ import com.fitcore.users.infrastructure.web.dto.student.StudentUpdateDto
 import com.fitcore.users.infrastructure.web.mapper.StudentDtoMapper
 import org.springframework.web.multipart.MultipartFile
 import com.fitcore.users.infrastructure.service.StorageService
+import com.fitcore.users.application.exception.ProfilePictureNotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -134,7 +135,7 @@ class StudentController(
         val userId = UserId.of(id)
         val student = findStudentUseCase.findById(userId)
             ?: return ResponseEntity.notFound().build()
-        val key = student.profileUrl ?: return ResponseEntity.notFound().build()
+        val key = student.profileUrl ?: throw ProfilePictureNotFoundException(id)
         val url = storageService.getPresignedUrl(key)
         
         return ResponseEntity.ok(mapOf("profileUrl" to url))

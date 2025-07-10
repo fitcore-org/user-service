@@ -17,7 +17,8 @@ class Employee private constructor(
     val hireDate: LocalDate,
     val terminationDate: LocalDate?,
     val registrationDate: LocalDateTime,
-    val lastUpdateDate: LocalDateTime
+    val lastUpdateDate: LocalDateTime,
+    val profileUrl: String?
 ) {
     companion object {
         private val CPF_REGEX = Regex("^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$")
@@ -36,7 +37,8 @@ class Employee private constructor(
             hireDate: LocalDate,
             terminationDate: LocalDate?,
             registrationDate: LocalDateTime,
-            lastUpdateDate: LocalDateTime
+            lastUpdateDate: LocalDateTime,
+            profileUrl: String?
         ): Employee {
             return Employee(
                 id = UserId.from(id),
@@ -50,7 +52,8 @@ class Employee private constructor(
                 hireDate = hireDate,
                 terminationDate = terminationDate,
                 registrationDate = registrationDate,
-                lastUpdateDate = lastUpdateDate
+                lastUpdateDate = lastUpdateDate,
+                profileUrl = profileUrl
             )
         }
         
@@ -85,9 +88,28 @@ class Employee private constructor(
                 hireDate = hireDate,
                 terminationDate = null,
                 registrationDate = now,
-                lastUpdateDate = now
+                lastUpdateDate = now,
+                profileUrl = null 
             )
         }
+    }
+
+    fun withProfileUrl(profileUrl: String?): Employee {
+        return Employee(
+            id = this.id,
+            name = this.name,
+            email = this.email,
+            cpf = this.cpf,
+            birthDate = this.birthDate,
+            phone = this.phone,
+            role = this.role,
+            active = this.active,
+            hireDate = this.hireDate,
+            terminationDate = this.terminationDate,
+            registrationDate = this.registrationDate,
+            lastUpdateDate = this.lastUpdateDate,
+            profileUrl = profileUrl 
+        )
     }
     
     fun update(
@@ -113,7 +135,8 @@ class Employee private constructor(
             hireDate = this.hireDate,
             terminationDate = this.terminationDate,
             registrationDate = this.registrationDate,
-            lastUpdateDate = LocalDateTime.now()
+            lastUpdateDate = LocalDateTime.now(),
+            profileUrl = this.profileUrl
         )
     }
     
@@ -137,7 +160,8 @@ class Employee private constructor(
             hireDate = this.hireDate,
             terminationDate = terminationDate,
             registrationDate = this.registrationDate,
-            lastUpdateDate = LocalDateTime.now()
+            lastUpdateDate = LocalDateTime.now(),
+            profileUrl = this.profileUrl
         )
     }
     
@@ -158,7 +182,8 @@ class Employee private constructor(
             hireDate = this.hireDate,
             terminationDate = null,
             registrationDate = this.registrationDate,
-            lastUpdateDate = LocalDateTime.now()
+            lastUpdateDate = LocalDateTime.now(),
+            profileUrl = this.profileUrl
         )
     }
 }

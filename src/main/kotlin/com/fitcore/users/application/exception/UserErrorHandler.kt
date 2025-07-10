@@ -13,3 +13,7 @@ class StudentNotFoundException(id: String) :
 // Exceções relacionadas a funcionários 
 class EmployeeNotFoundException(id: String) : 
     RuntimeException("Employee with ID $id not found")
+
+// Adicione esta exceção junto com as outras no arquivo
+class ProfilePictureNotFoundException(userId: String) : 
+    RuntimeException("User with ID $userId does not have a profile picture")

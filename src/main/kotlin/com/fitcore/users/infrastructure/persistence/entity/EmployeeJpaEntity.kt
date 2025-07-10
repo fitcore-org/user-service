@@ -44,5 +44,8 @@ class EmployeeJpaEntity(
     val registrationDate: LocalDateTime,
     
     @Column(nullable = false)
-    val lastUpdateDate: LocalDateTime
+    val lastUpdateDate: LocalDateTime,
+
+    @Column
+    val profileUrl: String?  
 )

@@ -45,6 +45,7 @@ class StudentJpaEntity(
     
     @Column(nullable = false)
     val lastUpdateDate: LocalDateTime,
+    
     @Column
-    val profileUrl: String?  // novo campo para armazenar a chave do perfil
+    val profileUrl: String?  
 )

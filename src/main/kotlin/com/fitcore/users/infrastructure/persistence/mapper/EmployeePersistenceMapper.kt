@@ -23,7 +23,8 @@ class EmployeePersistenceMapper {
             hireDate = domain.hireDate,
             terminationDate = domain.terminationDate,
             registrationDate = domain.registrationDate,
-            lastUpdateDate = domain.lastUpdateDate
+            lastUpdateDate = domain.lastUpdateDate,
+            profileUrl = domain.profileUrl
         )
     }
     
@@ -40,7 +41,8 @@ class EmployeePersistenceMapper {
             hireDate = entity.hireDate,
             terminationDate = entity.terminationDate,
             registrationDate = entity.registrationDate,
-            lastUpdateDate = entity.lastUpdateDate
+            lastUpdateDate = entity.lastUpdateDate,
+            profileUrl = entity.profileUrl
         )
     }
 }

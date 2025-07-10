@@ -23,6 +23,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 @ControllerAdvice
 class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
 
+    @ExceptionHandler(ProfilePictureNotFoundException::class)
+    fun handleProfilePictureNotFound(ex: ProfilePictureNotFoundException, request: WebRequest): ResponseEntity<Any> =
+        buildErrorResponse(HttpStatus.NOT_FOUND, ex.message ?: "Profile picture not found.")
+
     // 400 - Bad Request: IllegalArgumentException
     @ExceptionHandler(IllegalArgumentException::class)
     fun handleBadRequest(ex: Exception, request: WebRequest): ResponseEntity<Any> =

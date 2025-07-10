@@ -15,5 +15,6 @@ data class EmployeeResponseDto(
     val active: Boolean,
     val hireDate: LocalDate,
     val terminationDate: LocalDate?,
-    val registrationDate: LocalDateTime
+    val registrationDate: LocalDateTime,
+    val profileUrl: String?
 )

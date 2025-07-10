@@ -20,7 +20,8 @@ interface ManageEmployeeUseCase {
         name: String,
         email: String,
         phone: String,
-        roleType: String
+        roleType: String,
+        profileUrl: String? = null
     ): Employee
     
     fun terminateEmployee(
