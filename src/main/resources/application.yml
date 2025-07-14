@@ -34,6 +34,9 @@ logging:
     org.springframework.amqp.rabbit: DEBUG
     org.springframework.amqp.rabbit.core: DEBUG
     org.springframework.amqp.rabbit.connection: DEBUG
+
+profiles:
+  active: seed
   
 management:
   endpoints:

@@ -7,6 +7,7 @@ import com.fitcore.users.infrastructure.web.dto.student.PhysicalDataUpdateDto
 import com.fitcore.users.infrastructure.web.dto.student.StudentRequestDto
 import com.fitcore.users.infrastructure.web.dto.student.StudentResponseDto
 import com.fitcore.users.infrastructure.web.dto.student.StudentUpdateDto
+import com.fitcore.users.infrastructure.web.dto.student.ChangePlanDto
 import com.fitcore.users.infrastructure.web.mapper.StudentDtoMapper
 import org.springframework.web.multipart.MultipartFile
 import com.fitcore.users.infrastructure.service.StorageService
@@ -219,6 +220,16 @@ class StudentController(
             weight = request.weight,
             height = request.height
         )
+        return ResponseEntity.ok(studentDtoMapper.toResponseDto(student))
+    }
+
+    @PatchMapping("/{id}/plan")
+    fun changePlan(
+        @PathVariable id: String,
+        @RequestBody request: ChangePlanDto
+    ): ResponseEntity<StudentResponseDto> {
+        val userId = UserId.of(id)
+        val student = manageStudentUseCase.changePlan(userId, request.planType)
         return ResponseEntity.ok(studentDtoMapper.toResponseDto(student))
     }
     

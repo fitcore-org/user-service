@@ -112,6 +112,25 @@ class StudentService(
         .withProfileUrl(profileUrl)
         return studentRepository.save(updatedStudent)
     }
+
+    override fun changePlan(id: UserId, planType: String): Student {
+        val student = findById(id)
+        val plan = EnumMappers.toPlanDomain(planType)
+        val updatedStudent = student.update(
+            name = student.name,
+            email = student.email,
+            phone = student.phone,
+            plan = plan,
+            weight = student.weight,
+            height = student.height
+        )
+
+        // Publicando o evento
+        val savedStudent = studentRepository.save(updatedStudent)
+        studentEventPublisher.publishStudentPlanChanged(savedStudent)
+
+        return savedStudent
+    }
     
     override fun updatePhysicalData(id: UserId, weight: Double?, height: Int?): Student {
         val student = findById(id)
@@ -122,19 +141,32 @@ class StudentService(
     override fun activateStudent(id: UserId): Student {
         val student = findById(id)
         val activatedStudent = student.activate()
-        return studentRepository.save(activatedStudent)
+
+        // Publicando evento
+        val savedStudent = studentRepository.save(activatedStudent)
+        studentEventPublisher.publishStudentStatusChanged(savedStudent)
+        return savedStudent
     }
     
     override fun deactivateStudent(id: UserId): Student {
         val student = findById(id)
         val deactivatedStudent = student.deactivate()
-        return studentRepository.save(deactivatedStudent)
+
+        // Publicando evento
+        val savedStudent = studentRepository.save(deactivatedStudent)
+        studentEventPublisher.publishStudentStatusChanged(savedStudent)
+        return savedStudent
     }
     
     override fun deleteStudent(id: UserId): Boolean {
         // Verificar se estudante existe
         findById(id)
-        
-        return studentRepository.deleteById(id)
+
+        // Publicando evento
+        val deleted = studentRepository.deleteById(id)
+        if (deleted) {
+            studentEventPublisher.publishStudentDeleted(id)
+        }
+        return deleted
     }
 }

@@ -23,6 +23,8 @@ interface ManageEmployeeUseCase {
         roleType: String,
         profileUrl: String? = null
     ): Employee
+
+    fun changeRole(id: UserId, roleType: String): Employee
     
     fun terminateEmployee(
         id: UserId,

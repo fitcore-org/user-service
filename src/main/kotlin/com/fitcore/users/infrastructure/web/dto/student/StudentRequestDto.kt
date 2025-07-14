@@ -26,3 +26,7 @@ data class PhysicalDataUpdateDto(
     val weight: Double?,
     val height: Int?
 )
+
+data class ChangePlanDto(
+    val planType: String
+)

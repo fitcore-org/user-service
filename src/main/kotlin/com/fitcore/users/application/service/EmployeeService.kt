@@ -110,26 +110,40 @@ class EmployeeService(
         
         return savedEmployee
     }
+
+    override fun changeRole(id: UserId, roleType: String): Employee {
+        val employee = findById(id) ?: throw EmployeeNotFoundException(id.toString())
+        val role = EnumMappers.toRoleDomain(roleType)
+        val updatedEmployee = employee.update(
+            name = employee.name,
+            email = employee.email,
+            phone = employee.phone,
+            role = role
+        )
+
+        // Publicando evento
+        val savedEmployee = employeeRepository.save(updatedEmployee)
+        employeeEventPublisher.publishEmployeeRoleChanged(savedEmployee)
+        return savedEmployee
+    }
     
     override fun terminateEmployee(id: UserId, terminationDate: LocalDate): Employee {
         val employee = findById(id) ?: throw EmployeeNotFoundException(id.toString())
         val terminatedEmployee = employee.terminate(terminationDate)
+
+        // Publicando evento
         val savedEmployee = employeeRepository.save(terminatedEmployee)
-        
-        // Publicar evento
-        employeeEventPublisher.publishEmployeeTerminated(savedEmployee)
-        
+        employeeEventPublisher.publishEmployeeStatusChanged(savedEmployee)
         return savedEmployee
     }
     
     override fun reactivateEmployee(id: UserId): Employee {
         val employee = findById(id) ?: throw EmployeeNotFoundException(id.toString())
         val reactivatedEmployee = employee.reactivate()
+
+        // Publicando evento
         val savedEmployee = employeeRepository.save(reactivatedEmployee)
-        
-        // Publicar evento
-        employeeEventPublisher.publishEmployeeUpdated(savedEmployee)
-        
+        employeeEventPublisher.publishEmployeeStatusChanged(savedEmployee)
         return savedEmployee
     }
     
@@ -137,6 +151,11 @@ class EmployeeService(
         // Verificar se funcionário existe
         findById(id) ?: throw EmployeeNotFoundException(id.toString())
         
-        return employeeRepository.deleteById(id)
+        // Publicando evento
+        val deleted = employeeRepository.deleteById(id)
+        if (deleted) {
+            employeeEventPublisher.publishEmployeeDeleted(id)
+        }
+        return deleted
     }
 }

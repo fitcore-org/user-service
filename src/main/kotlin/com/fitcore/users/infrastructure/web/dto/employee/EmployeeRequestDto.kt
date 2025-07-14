@@ -22,3 +22,7 @@ data class EmployeeUpdateDto(
 data class EmployeeTerminationDto(
     val terminationDate: LocalDate?
 )
+
+data class ChangeRoleDto(
+    val roleType: String
+)

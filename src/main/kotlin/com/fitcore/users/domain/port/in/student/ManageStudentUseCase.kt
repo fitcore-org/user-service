@@ -33,6 +33,8 @@ interface ManageStudentUseCase {
         weight: Double?,
         height: Int?
     ): Student
+
+    fun changePlan(id: UserId, planType: String): Student
     
     fun activateStudent(id: UserId): Student
     

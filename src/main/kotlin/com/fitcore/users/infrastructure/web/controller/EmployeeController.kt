@@ -7,6 +7,7 @@ import com.fitcore.users.infrastructure.web.dto.employee.EmployeeRequestDto
 import com.fitcore.users.infrastructure.web.dto.employee.EmployeeResponseDto
 import com.fitcore.users.infrastructure.web.dto.employee.EmployeeUpdateDto
 import com.fitcore.users.infrastructure.web.dto.employee.EmployeeTerminationDto
+import com.fitcore.users.infrastructure.web.dto.employee.ChangeRoleDto
 import com.fitcore.users.infrastructure.web.mapper.EmployeeDtoMapper
 import org.springframework.web.multipart.MultipartFile
 import com.fitcore.users.infrastructure.service.StorageService
@@ -199,22 +200,36 @@ class EmployeeController(
         )
         return ResponseEntity.ok(employeeDtoMapper.toResponseDto(employee))
     }
+
+    @PatchMapping("/{id}/role")
+    fun changeRole(
+        @PathVariable id: String,
+        @RequestBody request: ChangeRoleDto
+    ): ResponseEntity<EmployeeResponseDto> {
+        val userId = UserId.of(id)
+        val employee = manageEmployeeUseCase.changeRole(userId, request.roleType)
+        return ResponseEntity.ok(employeeDtoMapper.toResponseDto(employee))
+    }
     
-    @PatchMapping("/{id}/status")
-    fun updateEmployeeStatus(
+    @PatchMapping("/{id}/activate")
+    fun activateEmployee(
+        @PathVariable id: String
+    ): ResponseEntity<EmployeeResponseDto> {
+        val userId = UserId.of(id)
+        val employee = manageEmployeeUseCase.reactivateEmployee(userId)
+        return ResponseEntity.ok(employeeDtoMapper.toResponseDto(employee))
+    }
+
+    @PatchMapping("/{id}/deactivate")
+    fun deactivateEmployee(
         @PathVariable id: String,
         @RequestBody request: EmployeeTerminationDto
     ): ResponseEntity<EmployeeResponseDto> {
         val userId = UserId.of(id)
-        
-        val employee = if (request.terminationDate != null) {
-            // Desativar funcionário
-            manageEmployeeUseCase.terminateEmployee(userId, request.terminationDate)
-        } else {
-            // Reativar funcionário
-            manageEmployeeUseCase.reactivateEmployee(userId)
+        if (request.terminationDate == null) {
+            return ResponseEntity.badRequest().build()
         }
-        
+        val employee = manageEmployeeUseCase.terminateEmployee(userId, request.terminationDate)
         return ResponseEntity.ok(employeeDtoMapper.toResponseDto(employee))
     }
     
