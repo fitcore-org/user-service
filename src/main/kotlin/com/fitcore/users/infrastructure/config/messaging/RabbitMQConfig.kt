@@ -23,7 +23,7 @@ class RabbitMQConfig {
         const val EMPLOYEE_EVENT_EXCHANGE = "employee-event-exchange"
 
         // Queues
-        const val REQUEST_QUEUE = "cadastro-usuario-request-queue"
+        const val REQUEST_QUEUE = "user.registered"
         const val STUDENT_QUEUE = "cadastro-aluno-queue"
         const val EMPLOYEE_QUEUE = "cadastro-funcionario-queue"
 
