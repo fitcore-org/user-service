@@ -34,7 +34,8 @@ class DataSeeder(
                         phone = student.phone,
                         planType = student.plan.name,
                         weight = student.weight,
-                        height = student.height
+                        height = student.height,
+                        registrationDate = student.registrationDate
                     )
                 } catch (e: Exception) {
                     println("⚠️ Skipping student ${student.email}: ${e.message}")

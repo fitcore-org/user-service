@@ -99,6 +99,35 @@ class Student internal constructor(
                 profileUrl = null 
             )
         }
+
+        fun createWithRegistrationDate(
+            name: String,
+            email: String,
+            cpf: String,
+            birthDate: LocalDate,
+            phone: String,
+            plan: StudentPlan,
+            weight: Double? = null,
+            height: Int? = null,
+            registrationDate: LocalDateTime
+        ): Student {
+            // ...validações iguais ao create...
+            return Student(
+                id = UserId.create(),
+                name = name,
+                email = email,
+                cpf = cpf,
+                birthDate = birthDate,
+                phone = phone,
+                plan = plan,
+                weight = weight,
+                height = height,
+                active = true,
+                registrationDate = registrationDate,
+                lastUpdateDate = registrationDate,
+                profileUrl = null
+            )
+        }
     }
 
     fun withProfileUrl(profileUrl: String?): Student {

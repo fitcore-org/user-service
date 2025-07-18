@@ -13,6 +13,7 @@ import com.fitcore.users.application.exception.EmailAlreadyRegisteredException
 import com.fitcore.users.application.exception.StudentNotFoundException
 import org.springframework.stereotype.Service
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Service
 class StudentService(
@@ -28,7 +29,8 @@ class StudentService(
         phone: String,
         planType: String,
         weight: Double?,
-        height: Int?
+        height: Int?,
+        registrationDate: LocalDateTime? 
     ): Student {
         // Verificar se email já existe
         if (studentRepository.findByEmail(email) != null) {
@@ -44,16 +46,32 @@ class StudentService(
         val plan = EnumMappers.toPlanDomain(planType)
         
         // Criar entidade de domínio
-        val student = Student.create(
-            name = name,
-            email = email,
-            cpf = cpf,
-            birthDate = birthDate,
-            phone = phone,
-            plan = plan,
-            weight = weight,
-            height = height
-        )
+        val student = if (registrationDate != null) {
+            // Se uma data foi fornecida (pelo seeder), use-a.
+            Student.createWithRegistrationDate(
+                name = name,
+                email = email,
+                cpf = cpf,
+                birthDate = birthDate,
+                phone = phone,
+                plan = plan,
+                weight = weight,
+                height = height,
+                registrationDate = registrationDate // <-- Usa a data 
+            )
+        } else {
+            // Se nenhuma data foi fornecida (uso normal da API), cria com a data atual.
+            Student.create(
+                name = name,
+                email = email,
+                cpf = cpf,
+                birthDate = birthDate,
+                phone = phone,
+                plan = plan,
+                weight = weight,
+                height = height
+            )
+        }
         
         // Persistir via repositório
         val savedStudent = studentRepository.save(student)

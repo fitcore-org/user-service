@@ -6,72 +6,89 @@ import com.fitcore.users.domain.model.employee.Employee
 import com.fitcore.users.domain.model.employee.Role
 import org.springframework.stereotype.Component
 import java.time.LocalDate
+import java.time.Month
+import kotlin.random.Random
 
 @Component
 class UserSeedData {
-    
+
+    private val firstNames = listOf("Ana", "Bruno", "Carlos", "Daniela", "Eduardo", "Fernanda", "Gabriel", "Helena", "Igor", "Juliana", "Lucas", "Mariana", "Nicolas", "Olivia", "Pedro", "Quintino", "Rafaela", "Sergio", "Tatiana", "Victor")
+    private val lastNames = listOf("Silva", "Santos", "Oliveira", "Souza", "Rodrigues", "Ferreira", "Alves", "Pereira", "Lima", "Gomes", "Ribeiro", "Martins", "Costa", "Melo")
+
     fun getStudents(): List<Student> {
         val students = mutableListOf<Student>()
-        
-        // 10 Students
-        repeat(10) { i ->
-            students.add(Student.create(
-                name = "Student ${i + 1}",
-                email = "student${i + 1}@fitcore.com",
-                cpf = "123.456.789-${String.format("%02d", i + 1)}",
-                birthDate = LocalDate.of(1995 + i, (i % 12) + 1, (i % 28) + 1),
-                phone = "(11) 99999-${String.format("%04d", 1000 + i)}",
-                plan = if (i % 2 == 0) StudentPlan.BASIC else StudentPlan.PREMIUM,
-                weight = 60.0 + (i * 5),
-                height = 160 + (i * 2)
-            ))
+        val today = LocalDate.of(2025, Month.JULY, 18)
+
+        val registrationsPerMonth = mapOf(
+            5 to 12, 4 to 13, 3 to 7, 2 to 8, 1 to 15, 0 to 5
+        )
+
+        var studentIndex = 0
+        registrationsPerMonth.forEach { (monthOffset, studentCount) ->
+            repeat(studentCount) {
+                val name = "${firstNames.random()} ${lastNames.random()}"
+                val registrationDate = today.minusMonths(monthOffset.toLong()).withDayOfMonth(Random.nextInt(1, 28))
+                val registrationDateTime = registrationDate.atTime(Random.nextInt(7, 22), Random.nextInt(0, 60))
+
+                students.add(Student.createWithRegistrationDate(
+                    name = name,
+                    email = "student${studentIndex + 1}@fitcore.com",
+                    cpf = generateValidCpf(formatted = true),
+                    birthDate = LocalDate.of(1990 + (studentIndex % 15), (studentIndex % 12) + 1, (studentIndex % 28) + 1),
+                    phone = "(11) 91234-${String.format("%04d", studentIndex + 1)}",
+                    plan = if (studentIndex % 3 == 0) StudentPlan.PREMIUM else StudentPlan.BASIC,
+                    weight = Random.nextDouble(55.0, 95.0),
+                    height = Random.nextInt(155, 190),
+                    registrationDate = registrationDateTime
+                ))
+                studentIndex++
+            }
         }
-        
         return students
     }
-    
+
     fun getEmployees(): List<Employee> {
         val employees = mutableListOf<Employee>()
-        
-        // 2 Managers
-        repeat(2) { i ->
-            employees.add(Employee.create(
-                name = "Manager ${i + 1}",
-                email = "manager${i + 1}@fitcore.com",
-                cpf = "111.222.333-${String.format("%02d", i + 11)}",
-                birthDate = LocalDate.of(1980 + i, (i % 12) + 1, (i % 28) + 1),
-                phone = "(11) 98888-${String.format("%04d", 1000 + i)}",
-                role = Role.MANAGER,
-                hireDate = LocalDate.now().minusYears(2 + i.toLong())
-            ))
+        var employeeIndex = 0
+
+        val roleDistribution = mapOf(
+            Role.MANAGER to 2,
+            Role.RECEPTIONIST to 4,
+            Role.INSTRUCTOR to 14
+        )
+
+        roleDistribution.forEach { (role, count) ->
+            repeat(count) {
+                val name = "${firstNames.random()} ${lastNames.random()}"
+                employees.add(Employee.create(
+                    name = name,
+                    email = "${role.name.lowercase()}${employeeIndex++}@fitcore.com",
+                    cpf = generateValidCpf(formatted = true),
+                    birthDate = LocalDate.of(Random.nextInt(1980, 2000), Random.nextInt(1, 13), Random.nextInt(1, 29)),
+                    phone = "(11) 98765-${String.format("%04d", employeeIndex)}",
+                    role = role,
+                    hireDate = LocalDate.now().minusMonths(Random.nextLong(3, 36))
+                ))
+            }
         }
-        
-        // 2 Secretaries (RECEPTIONIST no seu enum)
-        repeat(2) { i ->
-            employees.add(Employee.create(
-                name = "Secretary ${i + 1}",
-                email = "secretary${i + 1}@fitcore.com",
-                cpf = "222.333.444-${String.format("%02d", i + 13)}",
-                birthDate = LocalDate.of(1985 + i, (i % 12) + 1, (i % 28) + 1),
-                phone = "(11) 97777-${String.format("%04d", 1000 + i)}",
-                role = Role.RECEPTIONIST,
-                hireDate = LocalDate.now().minusYears(1 + i.toLong())
-            ))
-        }
-        
-        // 6 Instructors
-        repeat(6) { i ->
-            employees.add(Employee.create(
-                name = "Instructor ${i + 1}",
-                email = "instructor${i + 1}@fitcore.com",
-                cpf = "333.444.555-${String.format("%02d", i + 15)}",
-                birthDate = LocalDate.of(1990 + i, (i % 12) + 1, (i % 28) + 1),
-                phone = "(11) 96666-${String.format("%04d", 1000 + i)}",
-                role = Role.INSTRUCTOR,
-                hireDate = LocalDate.now().minusMonths(6 + i.toLong())
-            ))
-        }
-        
         return employees
+    }
+
+    /**
+     * FUNÇÃO AUXILIAR: Gera um CPF matematicamente válido para testes.
+     */
+    private fun generateValidCpf(formatted: Boolean): String {
+        val n = List(9) { Random.nextInt(0, 10) }
+        
+        val d1 = n.mapIndexed { i, digit -> digit * (10 - i) }.sum().let { (it * 10 % 11) % 10 }
+        val d2 = (n + d1).mapIndexed { i, digit -> digit * (11 - i) }.sum().let { (it * 10 % 11) % 10 }
+
+        val cpf = "${n.joinToString("")}$d1$d2"
+
+        return if (formatted) {
+            cpf.replace(Regex("(\\d{3})(\\d{3})(\\d{3})(\\d{2})"), "$1.$2.$3-$4")
+        } else {
+            cpf
+        }
     }
 }
