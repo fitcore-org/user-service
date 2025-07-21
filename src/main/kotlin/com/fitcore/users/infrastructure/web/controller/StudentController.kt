@@ -3,6 +3,7 @@ package com.fitcore.users.infrastructure.web.controller
 import com.fitcore.users.domain.model.common.UserId
 import com.fitcore.users.domain.port.`in`.student.FindStudentUseCase
 import com.fitcore.users.domain.port.`in`.student.ManageStudentUseCase
+import com.fitcore.users.infrastructure.config.swagger.documentation.StudentControllerDoc
 import com.fitcore.users.infrastructure.web.dto.student.PhysicalDataUpdateDto
 import com.fitcore.users.infrastructure.web.dto.student.StudentRequestDto
 import com.fitcore.users.infrastructure.web.dto.student.StudentResponseDto
@@ -23,10 +24,10 @@ class StudentController(
     private val findStudentUseCase: FindStudentUseCase,
     private val studentDtoMapper: StudentDtoMapper,
     private val storageService: StorageService
-) {
+) : StudentControllerDoc {
     
     @PostMapping
-    fun createStudent(@RequestBody request: StudentRequestDto): ResponseEntity<StudentResponseDto> {
+    override fun createStudent(@RequestBody request: StudentRequestDto): ResponseEntity<StudentResponseDto> {
         val student = manageStudentUseCase.registerStudent(
             name = request.name,
             email = request.email,
@@ -44,7 +45,7 @@ class StudentController(
     }
 
     @PostMapping("/{id}/profile")
-    fun uploadProfile(
+    override fun uploadProfile(
         @PathVariable id: String,
         @RequestParam("file") file: MultipartFile
     ): ResponseEntity<StudentResponseDto> {
@@ -71,7 +72,7 @@ class StudentController(
     }
 
     @PutMapping("/{id}/profile")
-    fun updateProfile(
+    override fun updateProfile(
         @PathVariable id: String,
         @RequestParam("file") file: MultipartFile
     ): ResponseEntity<StudentResponseDto> {
@@ -103,7 +104,7 @@ class StudentController(
     }
 
     @DeleteMapping("/{id}/profile")
-    fun deleteProfile(@PathVariable id: String): ResponseEntity<StudentResponseDto> {
+    override fun deleteProfile(@PathVariable id: String): ResponseEntity<StudentResponseDto> {
         val userId = UserId.of(id)
         val student = findStudentUseCase.findById(userId)
             ?: return ResponseEntity.notFound().build()
@@ -132,7 +133,7 @@ class StudentController(
     }
         
     @GetMapping("/{id}/profile-url")
-    fun getProfileUrl(@PathVariable id: String): ResponseEntity<Map<String, String>> {
+    override fun getProfileUrl(@PathVariable id: String): ResponseEntity<Map<String, String>> {
         val userId = UserId.of(id)
         val student = findStudentUseCase.findById(userId)
             ?: return ResponseEntity.notFound().build()
@@ -143,7 +144,7 @@ class StudentController(
     }
     
     @GetMapping
-    fun getAllStudents(): ResponseEntity<List<StudentResponseDto>> {
+    override fun getAllStudents(): ResponseEntity<List<StudentResponseDto>> {
         val students = findStudentUseCase.findAll()
         val responseList = students.map { studentDtoMapper.toResponseDto(it) }
         
@@ -151,14 +152,14 @@ class StudentController(
     }
     
     @GetMapping("/{id}")
-    fun getStudentById(@PathVariable id: String): ResponseEntity<StudentResponseDto> {
+    override fun getStudentById(@PathVariable id: String): ResponseEntity<StudentResponseDto> {
         val userId = UserId.of(id)
         val student = findStudentUseCase.findById(userId)
         return ResponseEntity.ok(studentDtoMapper.toResponseDto(student!!))
     }
     
     @GetMapping("/email/{email}")
-    fun getStudentByEmail(@PathVariable email: String): ResponseEntity<StudentResponseDto> {
+    override fun getStudentByEmail(@PathVariable email: String): ResponseEntity<StudentResponseDto> {
         val student = findStudentUseCase.findByEmail(email)
         return if (student != null) {
             ResponseEntity.ok(studentDtoMapper.toResponseDto(student))
@@ -168,7 +169,7 @@ class StudentController(
     }
     
     @GetMapping("/cpf/{cpf}")
-    fun getStudentByCpf(@PathVariable cpf: String): ResponseEntity<StudentResponseDto> {
+    override fun getStudentByCpf(@PathVariable cpf: String): ResponseEntity<StudentResponseDto> {
         val student = findStudentUseCase.findByCpf(cpf)
         return if (student != null) {
             ResponseEntity.ok(studentDtoMapper.toResponseDto(student))
@@ -178,21 +179,21 @@ class StudentController(
     }
     
     @GetMapping("/plan/{planType}")
-    fun getStudentsByPlan(@PathVariable planType: String): ResponseEntity<List<StudentResponseDto>> {
+    override fun getStudentsByPlan(@PathVariable planType: String): ResponseEntity<List<StudentResponseDto>> {
         val students = findStudentUseCase.findByPlan(planType)
         val responseList = students.map { studentDtoMapper.toResponseDto(it) }
         return ResponseEntity.ok(responseList)
     }
     
     @GetMapping("/active")
-    fun getActiveStudents(): ResponseEntity<List<StudentResponseDto>> {
+    override fun getActiveStudents(): ResponseEntity<List<StudentResponseDto>> {
         val students = findStudentUseCase.findAllActive()
         val responseList = students.map { studentDtoMapper.toResponseDto(it) }
         return ResponseEntity.ok(responseList)
     }
     
     @PutMapping("/{id}")
-    fun updateStudent(
+    override fun updateStudent(
         @PathVariable id: String,
         @RequestBody request: StudentUpdateDto
     ): ResponseEntity<StudentResponseDto> {
@@ -210,7 +211,7 @@ class StudentController(
     }
     
     @PatchMapping("/{id}/physical-data")
-    fun updatePhysicalData(
+    override fun updatePhysicalData(
         @PathVariable id: String,
         @RequestBody request: PhysicalDataUpdateDto
     ): ResponseEntity<StudentResponseDto> {
@@ -224,7 +225,7 @@ class StudentController(
     }
 
     @PatchMapping("/{id}/plan")
-    fun changePlan(
+    override fun changePlan(
         @PathVariable id: String,
         @RequestBody request: ChangePlanDto
     ): ResponseEntity<StudentResponseDto> {
@@ -234,21 +235,21 @@ class StudentController(
     }
     
     @PatchMapping("/{id}/activate")
-    fun activateStudent(@PathVariable id: String): ResponseEntity<StudentResponseDto> {
+    override fun activateStudent(@PathVariable id: String): ResponseEntity<StudentResponseDto> {
         val userId = UserId.of(id)
         val student = manageStudentUseCase.activateStudent(userId)
         return ResponseEntity.ok(studentDtoMapper.toResponseDto(student))
     }
     
     @PatchMapping("/{id}/deactivate")
-    fun deactivateStudent(@PathVariable id: String): ResponseEntity<StudentResponseDto> {
+    override fun deactivateStudent(@PathVariable id: String): ResponseEntity<StudentResponseDto> {
         val userId = UserId.of(id)
         val student = manageStudentUseCase.deactivateStudent(userId)
         return ResponseEntity.ok(studentDtoMapper.toResponseDto(student))
     }
     
     @DeleteMapping("/{id}")
-    fun deleteStudent(@PathVariable id: String): ResponseEntity<Void> {
+    override fun deleteStudent(@PathVariable id: String): ResponseEntity<Void> {
         val userId = UserId.of(id)
         val deleted = manageStudentUseCase.deleteStudent(userId)
         return if (deleted) {
