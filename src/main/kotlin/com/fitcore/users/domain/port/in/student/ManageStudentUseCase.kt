@@ -4,6 +4,7 @@ import com.fitcore.users.domain.model.common.UserId
 import com.fitcore.users.domain.model.student.Student
 import com.fitcore.users.domain.model.student.StudentPlan
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 interface ManageStudentUseCase {
     fun registerStudent(
@@ -14,7 +15,8 @@ interface ManageStudentUseCase {
         phone: String,
         planType: String,
         weight: Double?,
-        height: Int?
+        height: Int?,
+        registrationDate: LocalDateTime? = null
     ): Student
     
     fun updateStudent(
@@ -24,7 +26,8 @@ interface ManageStudentUseCase {
         phone: String,
         planType: String,
         weight: Double?,
-        height: Int?
+        height: Int?,
+        profileUrl: String? = null
     ): Student
     
     fun updatePhysicalData(
@@ -32,6 +35,8 @@ interface ManageStudentUseCase {
         weight: Double?,
         height: Int?
     ): Student
+
+    fun changePlan(id: UserId, planType: String): Student
     
     fun activateStudent(id: UserId): Student
     

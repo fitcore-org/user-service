@@ -7,6 +7,7 @@ import com.fitcore.users.domain.port.out.student.StudentRepository
 import com.fitcore.users.infrastructure.persistence.entity.StudentJpaEntity
 import com.fitcore.users.infrastructure.persistence.mapper.StudentPersistenceMapper
 import com.fitcore.users.infrastructure.persistence.repository.StudentJpaRepository
+import com.fitcore.users.infrastructure.util.EnumMappers
 import org.springframework.stereotype.Component
 
 @Component
@@ -36,12 +37,7 @@ class StudentPersistenceAdapter(
     }
     
     override fun findByPlan(plan: StudentPlan): List<Student> {
-        val planType = when (plan) {
-            StudentPlan.BASIC -> StudentJpaEntity.PlanType.BASIC
-            StudentPlan.INTERMEDIATE -> StudentJpaEntity.PlanType.INTERMEDIATE
-            StudentPlan.PREMIUM -> StudentJpaEntity.PlanType.PREMIUM
-        }
-        return studentJpaRepository.findByPlan(planType).map { mapper.toDomain(it) }
+        return studentJpaRepository.findByPlan(plan).map { mapper.toDomain(it) }
     }
     
     override fun findAllActive(): List<Student> {

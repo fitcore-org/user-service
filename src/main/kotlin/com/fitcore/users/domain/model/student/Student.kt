@@ -3,8 +3,9 @@ package com.fitcore.users.domain.model.student
 import com.fitcore.users.domain.model.common.UserId
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.util.UUID
 
-class Student private constructor(
+class Student internal constructor(
     val id: UserId,
     val name: String,
     val email: String,
@@ -16,13 +17,45 @@ class Student private constructor(
     val height: Int?,            // Altura em cm (opcional)
     val active: Boolean,
     val registrationDate: LocalDateTime,
-    val lastUpdateDate: LocalDateTime
+    val lastUpdateDate: LocalDateTime,
+    val profileUrl: String?
 ) {
     companion object {
         private val CPF_REGEX = Regex("^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$")
         private val EMAIL_REGEX = Regex("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
         private val PHONE_REGEX = Regex("^\\(\\d{2}\\)\\s\\d{4,5}-\\d{4}$")
         
+        fun fromPersistence(
+            id: UUID,
+            name: String,
+            email: String,
+            cpf: String,
+            birthDate: LocalDate,
+            phone: String,
+            plan: StudentPlan,
+            weight: Double?,
+            height: Int?,
+            active: Boolean,
+            registrationDate: LocalDateTime,
+            lastUpdateDate: LocalDateTime,
+            profileUrl: String? 
+        ): Student {
+            return Student(
+                id = UserId.from(id),
+                name = name,
+                email = email,
+                cpf = cpf,
+                birthDate = birthDate,
+                phone = phone,
+                plan = plan,
+                weight = weight,
+                height = height,
+                active = active,
+                registrationDate = registrationDate,
+                lastUpdateDate = lastUpdateDate,
+                profileUrl = profileUrl
+            )
+        }
         fun create(
             name: String,
             email: String,
@@ -50,7 +83,6 @@ class Student private constructor(
             }
             
             val now = LocalDateTime.now()
-            
             return Student(
                 id = UserId.create(),
                 name = name,
@@ -63,9 +95,57 @@ class Student private constructor(
                 height = height,
                 active = true,
                 registrationDate = now,
-                lastUpdateDate = now
+                lastUpdateDate = now,
+                profileUrl = null 
             )
         }
+
+        fun createWithRegistrationDate(
+            name: String,
+            email: String,
+            cpf: String,
+            birthDate: LocalDate,
+            phone: String,
+            plan: StudentPlan,
+            weight: Double? = null,
+            height: Int? = null,
+            registrationDate: LocalDateTime
+        ): Student {
+            // ...validações iguais ao create...
+            return Student(
+                id = UserId.create(),
+                name = name,
+                email = email,
+                cpf = cpf,
+                birthDate = birthDate,
+                phone = phone,
+                plan = plan,
+                weight = weight,
+                height = height,
+                active = true,
+                registrationDate = registrationDate,
+                lastUpdateDate = registrationDate,
+                profileUrl = null
+            )
+        }
+    }
+
+    fun withProfileUrl(profileUrl: String?): Student {
+        return Student(
+            id = this.id,
+            name = this.name,
+            email = this.email,
+            cpf = this.cpf,
+            birthDate = this.birthDate,
+            phone = this.phone,
+            plan = this.plan,
+            weight = this.weight,
+            height = this.height,
+            active = this.active,
+            registrationDate = this.registrationDate,
+            lastUpdateDate = this.lastUpdateDate,
+            profileUrl = profileUrl
+        )
     }
     
     fun update(
@@ -102,7 +182,8 @@ class Student private constructor(
             height = height,
             active = this.active,
             registrationDate = this.registrationDate,
-            lastUpdateDate = LocalDateTime.now()
+            lastUpdateDate = LocalDateTime.now(),
+            profileUrl = this.profileUrl 
         )
     }
     
@@ -130,7 +211,8 @@ class Student private constructor(
             height = height,
             active = this.active,
             registrationDate = this.registrationDate,
-            lastUpdateDate = LocalDateTime.now()
+            lastUpdateDate = LocalDateTime.now(),
+            profileUrl = this.profileUrl 
         )
     }
     
@@ -159,7 +241,8 @@ class Student private constructor(
             height = this.height,
             active = false,
             registrationDate = this.registrationDate,
-            lastUpdateDate = LocalDateTime.now()
+            lastUpdateDate = LocalDateTime.now(),
+            profileUrl = this.profileUrl
         )
     }
     
@@ -180,7 +263,8 @@ class Student private constructor(
             height = this.height,
             active = true,
             registrationDate = this.registrationDate,
-            lastUpdateDate = LocalDateTime.now()
+            lastUpdateDate = LocalDateTime.now(),
+            profileUrl = this.profileUrl
         )
     }
 }

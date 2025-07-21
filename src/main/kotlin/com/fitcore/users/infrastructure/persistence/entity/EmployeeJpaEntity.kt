@@ -1,14 +1,14 @@
 package com.fitcore.users.infrastructure.persistence.entity
 
-import com.fitcore.users.domain.model.student.StudentPlan 
+import com.fitcore.users.domain.model.employee.Role 
 import jakarta.persistence.*
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.UUID
 
 @Entity
-@Table(name = "students")
-class StudentJpaEntity(
+@Table(name = "employees")
+class EmployeeJpaEntity(
     @Id
     val id: UUID,
     
@@ -29,23 +29,23 @@ class StudentJpaEntity(
     
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    val plan: StudentPlan,
-    
-    @Column
-    val weight: Double?,
-    
-    @Column
-    val height: Int?,
+    val role: Role,
     
     @Column(nullable = false)
     val active: Boolean,
+    
+    @Column(nullable = false)
+    val hireDate: LocalDate,
+    
+    @Column
+    val terminationDate: LocalDate?,
     
     @Column(nullable = false)
     val registrationDate: LocalDateTime,
     
     @Column(nullable = false)
     val lastUpdateDate: LocalDateTime,
-    
+
     @Column
     val profileUrl: String?  
 )
