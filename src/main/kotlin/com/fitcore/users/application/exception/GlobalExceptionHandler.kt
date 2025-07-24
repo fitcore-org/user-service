@@ -4,9 +4,6 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode
 import org.springframework.http.ResponseEntity
-import org.springframework.security.access.AccessDeniedException
-import org.springframework.security.authentication.BadCredentialsException
-import org.springframework.security.core.AuthenticationException
 import org.springframework.web.HttpMediaTypeNotAcceptableException
 import org.springframework.web.HttpMediaTypeNotSupportedException
 import org.springframework.web.HttpRequestMethodNotSupportedException
@@ -33,14 +30,14 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
         buildErrorResponse(HttpStatus.BAD_REQUEST, ex.message ?: "Invalid request.")
 
     // 401 - Unauthorized
-    @ExceptionHandler(BadCredentialsException::class, AuthenticationException::class)
-    fun handleUnauthorized(ex: Exception, request: WebRequest): ResponseEntity<Any> =
-        buildErrorResponse(HttpStatus.UNAUTHORIZED, ex.message ?: "Authentication required.")
+    // @ExceptionHandler(BadCredentialsException::class, // AuthenticationException::class)
+    // fun handleUnauthorized(ex: Exception, request: WebRequest): ResponseEntity<Any> =
+    //    buildErrorResponse(HttpStatus.UNAUTHORIZED, ex.message ?: "Authentication required.")
 
     // 403 - Forbidden
-    @ExceptionHandler(AccessDeniedException::class)
-    fun handleForbidden(ex: Exception, request: WebRequest): ResponseEntity<Any> =
-        buildErrorResponse(HttpStatus.FORBIDDEN, ex.message ?: "Access denied.")
+    // @ExceptionHandler(AccessDeniedException::class)
+    // fun handleForbidden(ex: Exception, request: WebRequest): ResponseEntity<Any> =
+    //    buildErrorResponse(HttpStatus.FORBIDDEN, ex.message ?: "Access denied.")
 
     // 404 - Not Found (NoSuchElementException)
     @ExceptionHandler(NoSuchElementException::class)
