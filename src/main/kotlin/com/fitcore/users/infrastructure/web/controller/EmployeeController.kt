@@ -3,7 +3,6 @@ package com.fitcore.users.infrastructure.web.controller
 import com.fitcore.users.domain.model.common.UserId
 import com.fitcore.users.domain.port.`in`.employee.FindEmployeeUseCase
 import com.fitcore.users.domain.port.`in`.employee.ManageEmployeeUseCase
-import com.fitcore.users.infrastructure.config.swagger.documentation.EmployeeControllerDoc
 import com.fitcore.users.infrastructure.web.dto.employee.EmployeeRequestDto
 import com.fitcore.users.infrastructure.web.dto.employee.EmployeeResponseDto
 import com.fitcore.users.infrastructure.web.dto.employee.EmployeeUpdateDto
@@ -25,10 +24,10 @@ class EmployeeController(
     private val findEmployeeUseCase: FindEmployeeUseCase,
     private val employeeDtoMapper: EmployeeDtoMapper,
     private val storageService: StorageService
-) : EmployeeControllerDoc {
+)  {
     
     @PostMapping
-    override fun createEmployee(@RequestBody request: EmployeeRequestDto): ResponseEntity<EmployeeResponseDto> {
+    fun createEmployee(@RequestBody request: EmployeeRequestDto): ResponseEntity<EmployeeResponseDto> {
         val employee = manageEmployeeUseCase.registerEmployee(
             name = request.name,
             email = request.email,
@@ -45,7 +44,7 @@ class EmployeeController(
     }
 
     @PostMapping("/{id}/profile")
-    override fun uploadProfile(
+    fun uploadProfile(
         @PathVariable id: String,
         @RequestParam("file") file: MultipartFile
     ): ResponseEntity<EmployeeResponseDto> {
@@ -70,7 +69,7 @@ class EmployeeController(
     }
 
     @PutMapping("/{id}/profile")
-    override fun updateProfile(
+    fun updateProfile(
         @PathVariable id: String,
         @RequestParam("file") file: MultipartFile
     ): ResponseEntity<EmployeeResponseDto> {
@@ -100,7 +99,7 @@ class EmployeeController(
     }
 
     @DeleteMapping("/{id}/profile")
-    override fun deleteProfile(@PathVariable id: String): ResponseEntity<EmployeeResponseDto> {
+    fun deleteProfile(@PathVariable id: String): ResponseEntity<EmployeeResponseDto> {
         val userId = UserId.of(id)
         val employee = findEmployeeUseCase.findById(userId)
             ?: return ResponseEntity.notFound().build()
@@ -127,7 +126,7 @@ class EmployeeController(
     }
         
     @GetMapping("/{id}/profile-url")
-    override fun getProfileUrl(@PathVariable id: String): ResponseEntity<Map<String, String>> {
+    fun getProfileUrl(@PathVariable id: String): ResponseEntity<Map<String, String>> {
         val userId = UserId.of(id)
         val employee = findEmployeeUseCase.findById(userId)
             ?: return ResponseEntity.notFound().build()
@@ -138,7 +137,7 @@ class EmployeeController(
     }
     
     @GetMapping
-    override fun getAllEmployees(): ResponseEntity<List<EmployeeResponseDto>> {
+    fun getAllEmployees(): ResponseEntity<List<EmployeeResponseDto>> {
         val employees = findEmployeeUseCase.findAll()
         val responseList = employees.map { employeeDtoMapper.toResponseDto(it) }
         
@@ -146,14 +145,14 @@ class EmployeeController(
     }
     
     @GetMapping("/{id}")
-    override fun getEmployeeById(@PathVariable id: String): ResponseEntity<EmployeeResponseDto> {
+    fun getEmployeeById(@PathVariable id: String): ResponseEntity<EmployeeResponseDto> {
         val userId = UserId.of(id)
         val employee = findEmployeeUseCase.findById(userId)
         return ResponseEntity.ok(employeeDtoMapper.toResponseDto(employee!!))
     }
     
     @GetMapping("/email/{email}")
-    override fun getEmployeeByEmail(@PathVariable email: String): ResponseEntity<EmployeeResponseDto> {
+    fun getEmployeeByEmail(@PathVariable email: String): ResponseEntity<EmployeeResponseDto> {
         val employee = findEmployeeUseCase.findByEmail(email)
         return if (employee != null) {
             ResponseEntity.ok(employeeDtoMapper.toResponseDto(employee))
@@ -163,7 +162,7 @@ class EmployeeController(
     }
     
     @GetMapping("/cpf/{cpf}")
-    override fun getEmployeeByCpf(@PathVariable cpf: String): ResponseEntity<EmployeeResponseDto> {
+    fun getEmployeeByCpf(@PathVariable cpf: String): ResponseEntity<EmployeeResponseDto> {
         val employee = findEmployeeUseCase.findByCpf(cpf)
         return if (employee != null) {
             ResponseEntity.ok(employeeDtoMapper.toResponseDto(employee))
@@ -173,21 +172,21 @@ class EmployeeController(
     }
     
     @GetMapping("/by-role/{role}")
-    override fun getEmployeesByRole(@PathVariable role: String): ResponseEntity<List<EmployeeResponseDto>> {
+    fun getEmployeesByRole(@PathVariable role: String): ResponseEntity<List<EmployeeResponseDto>> {
         val employees = findEmployeeUseCase.findByRole(role)
         val responseList = employees.map { employeeDtoMapper.toResponseDto(it) }
         return ResponseEntity.ok(responseList)
     }
     
     @GetMapping("/active")
-    override fun getActiveEmployees(): ResponseEntity<List<EmployeeResponseDto>> {
+    fun getActiveEmployees(): ResponseEntity<List<EmployeeResponseDto>> {
         val employees = findEmployeeUseCase.findAllActive()
         val responseList = employees.map { employeeDtoMapper.toResponseDto(it) }
         return ResponseEntity.ok(responseList)
     }
     
     @PutMapping("/{id}")
-    override fun updateEmployee(
+    fun updateEmployee(
         @PathVariable id: String,
         @RequestBody request: EmployeeUpdateDto
     ): ResponseEntity<EmployeeResponseDto> {
@@ -203,7 +202,7 @@ class EmployeeController(
     }
 
     @PatchMapping("/{id}/role")
-    override fun changeRole(
+    fun changeRole(
         @PathVariable id: String,
         @RequestBody request: ChangeRoleDto
     ): ResponseEntity<EmployeeResponseDto> {
@@ -213,7 +212,7 @@ class EmployeeController(
     }
     
     @PatchMapping("/{id}/activate")
-    override fun activateEmployee(
+    fun activateEmployee(
         @PathVariable id: String
     ): ResponseEntity<EmployeeResponseDto> {
         val userId = UserId.of(id)
@@ -222,7 +221,7 @@ class EmployeeController(
     }
 
     @PatchMapping("/{id}/deactivate")
-    override fun deactivateEmployee(
+    fun deactivateEmployee(
         @PathVariable id: String,
         @RequestBody request: EmployeeTerminationDto
     ): ResponseEntity<EmployeeResponseDto> {
@@ -235,7 +234,7 @@ class EmployeeController(
     }
     
     @DeleteMapping("/{id}")
-    override fun deleteEmployee(@PathVariable id: String): ResponseEntity<Void> {
+    fun deleteEmployee(@PathVariable id: String): ResponseEntity<Void> {
         val userId = UserId.of(id)
         val deleted = manageEmployeeUseCase.deleteEmployee(userId)
         return if (deleted) {
