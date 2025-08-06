@@ -30,11 +30,10 @@ class UserEventConsumer(
     
     private fun mapRoleToEmployee(role: String): Role {
         return when (role.uppercase()) {
-            "ADMIN" -> Role.ADMIN
             "SECRETARY" -> Role.RECEPTIONIST
-            "TEACHER" -> Role.INSTRUCTOR
+            "TEACHER" -> Role.PERSONAL_TRAINER
             "MANAGER" -> Role.MANAGER
-            else -> Role.RECEPTIONIST // Default para roles não mapeados
+            else -> Role.CLEANER // Default para roles não mapeados
         }
     }
     

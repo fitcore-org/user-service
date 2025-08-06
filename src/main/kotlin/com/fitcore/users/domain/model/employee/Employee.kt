@@ -84,7 +84,7 @@ class Employee private constructor(
                 birthDate = birthDate,
                 phone = phone,
                 role = role,
-                active = true,
+                active = false, // Ao criar o funcionário ele precisa ser pago através do Finance-service para confirmar o status de active
                 hireDate = hireDate,
                 terminationDate = null,
                 registrationDate = now,
