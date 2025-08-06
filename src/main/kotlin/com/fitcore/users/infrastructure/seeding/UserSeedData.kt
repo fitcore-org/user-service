@@ -54,7 +54,8 @@ class UserSeedData {
         val roleDistribution = mapOf(
             Role.MANAGER to 2,
             Role.RECEPTIONIST to 4,
-            Role.INSTRUCTOR to 14
+            Role.PERSONAL_TRAINER to 12,
+            Role.CLEANER to 2
         )
 
         roleDistribution.forEach { (role, count) ->
