@@ -21,8 +21,8 @@ class EmployeeEventProducer(
         try {
             val dto = employeeDtoMapper.toResponseDto(employee)
             rabbitTemplate.convertAndSend(
-                RabbitMQConfig.EMPLOYEE_EXCHANGE,
-                RabbitMQConfig.EMPLOYEE_ROUTE_KEY,
+                RabbitMQConfig.EMPLOYEE_EVENT_EXCHANGE,
+                RabbitMQConfig.EMPLOYEE_CREATED_ROUTE_KEY,
                 dto
             )
             logger.info("Employee created event published for: ${employee.email}")

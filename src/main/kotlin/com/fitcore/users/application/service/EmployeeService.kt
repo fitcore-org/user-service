@@ -158,4 +158,16 @@ class EmployeeService(
         }
         return deleted
     }
+    
+    fun updateEmployeeStatus(id: UserId, active: Boolean): Employee {
+        val employee = findById(id) ?: throw EmployeeNotFoundException(id.toString())
+        
+        val updatedEmployee = if (active) {
+            employee.reactivate()
+        } else {
+            employee.terminate()
+        }
+        
+        return employeeRepository.save(updatedEmployee)
+    }
 }
