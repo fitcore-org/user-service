@@ -98,10 +98,12 @@ class StudentService(
     
     override fun updateStudent(
         id: UserId, 
-        name: String, 
-        email: String, 
-        phone: String, 
-        planType: String, 
+        name: String?, 
+        email: String?, 
+        cpf: String?,
+        birthDate: LocalDate?,
+        phone: String?, 
+        planType: String?, 
         weight: Double?, 
         height: Int?,
         profileUrl: String?
@@ -109,11 +111,11 @@ class StudentService(
         val student = findById(id)
         
         // Verificar se o novo email já existe (para outro estudante)
-        if (email != student.email && studentRepository.findByEmail(email) != null) {
+        if (email != null && email != student.email && studentRepository.findByEmail(email) != null) {
             throw EmailAlreadyRegisteredException(email)
         }
         
-        val updatedStudent = student.update(name, email, phone, planType, weight, height)
+        val updatedStudent = student.update(name, email, cpf, birthDate, phone, planType, weight, height)
         .withProfileUrl(profileUrl)
         return studentRepository.save(updatedStudent)
     }
@@ -123,6 +125,8 @@ class StudentService(
         val updatedStudent = student.update(
             name = student.name,
             email = student.email,
+            cpf = student.cpf,
+            birthDate = student.birthDate,
             phone = student.phone,
             plan = planType,
             weight = student.weight,

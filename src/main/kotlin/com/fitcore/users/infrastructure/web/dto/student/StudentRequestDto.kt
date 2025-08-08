@@ -14,10 +14,12 @@ data class StudentRequestDto(
 )
 
 data class StudentUpdateDto(
-    val name: String,
-    val email: String,
-    val phone: String,
-    val planType: String,
+    val name: String?,
+    val email: String?,
+    val cpf: String?,
+    val birthDate: LocalDate?,
+    val phone: String?,
+    val planType: String?,
     val weight: Double?,
     val height: Int?
 )

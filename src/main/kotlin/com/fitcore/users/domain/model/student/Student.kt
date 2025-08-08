@@ -147,17 +147,20 @@ class Student internal constructor(
     }
     
     fun update(
-        name: String,
-        email: String,
-        phone: String,
-        plan: String,
+        name: String?,
+        email: String?,
+        cpf: String?,
+        birthDate: LocalDate?,
+        phone: String?,
+        plan: String?,
         weight: Double? = this.weight,
         height: Int? = this.height
     ): Student {
-        // Validações de domínio
-        require(name.isNotBlank()) { "Name cannot be blank" }
-        require(email.matches(EMAIL_REGEX)) { "Invalid email format" }
-        require(phone.matches(PHONE_REGEX)) { "Invalid phone format" }
+        // Validações de domínio apenas para campos não nulos
+        name?.let { require(it.isNotBlank()) { "Name cannot be blank" } }
+        email?.let { require(it.matches(EMAIL_REGEX)) { "Invalid email format" } }
+        phone?.let { require(it.matches(PHONE_REGEX)) { "Invalid phone format" } }
+        birthDate?.let { require(it.isBefore(LocalDate.now().minusYears(12))) { "Student must be at least 12 years old" } }
 
         // Validações para peso e altura
         weight?.let { 
@@ -170,14 +173,14 @@ class Student internal constructor(
         
         return Student(
             id = this.id,
-            name = name,
-            email = email,
-            cpf = this.cpf,
-            birthDate = this.birthDate,
-            phone = phone,
-            plan = plan,
-            weight = weight,
-            height = height,
+            name = name ?: this.name,
+            email = email ?: this.email,
+            cpf = cpf ?: this.cpf,
+            birthDate = birthDate ?: this.birthDate,
+            phone = phone ?: this.phone,
+            plan = plan ?: this.plan,
+            weight = weight ?: this.weight,
+            height = height ?: this.height,
             active = this.active,
             registrationDate = this.registrationDate,
             lastUpdateDate = LocalDateTime.now(),
