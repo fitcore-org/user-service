@@ -20,10 +20,12 @@ interface ManageStudentUseCase {
     
     fun updateStudent(
         id: UserId,
-        name: String,
-        email: String,
-        phone: String,
-        planType: String,
+        name: String?,
+        email: String?,
+        cpf: String?,
+        birthDate: LocalDate?,
+        phone: String?,
+        planType: String?,
         weight: Double?,
         height: Int?,
         profileUrl: String? = null
