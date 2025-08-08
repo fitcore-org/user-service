@@ -2,13 +2,10 @@ package com.fitcore.users.application.service
 
 import com.fitcore.users.domain.model.common.UserId
 import com.fitcore.users.domain.model.student.Student
-import com.fitcore.users.domain.model.student.StudentPlan
 import com.fitcore.users.domain.port.`in`.student.FindStudentUseCase
 import com.fitcore.users.domain.port.`in`.student.ManageStudentUseCase
 import com.fitcore.users.domain.port.out.student.StudentRepository
 import com.fitcore.users.domain.port.out.student.event.StudentEventPublisher
-import com.fitcore.users.infrastructure.util.EnumMappers
-import com.fitcore.users.application.exception.CpfAlreadyRegisteredException
 import com.fitcore.users.application.exception.EmailAlreadyRegisteredException
 import com.fitcore.users.application.exception.StudentNotFoundException
 import org.springframework.stereotype.Service
@@ -37,14 +34,6 @@ class StudentService(
             throw EmailAlreadyRegisteredException(email)
         }
         
-        // Verificar se CPF já existe
-        if (studentRepository.findByCpf(cpf) != null) {
-            throw CpfAlreadyRegisteredException(cpf)
-        }
-        
-        // Converter string do plano para enum usando a classe centralizada
-        val plan = EnumMappers.toPlanDomain(planType)
-        
         // Criar entidade de domínio
         val student = if (registrationDate != null) {
             // Se uma data foi fornecida (pelo seeder), use-a.
@@ -54,7 +43,7 @@ class StudentService(
                 cpf = cpf,
                 birthDate = birthDate,
                 phone = phone,
-                plan = plan,
+                plan = planType,
                 weight = weight,
                 height = height,
                 registrationDate = registrationDate // <-- Usa a data 
@@ -67,7 +56,7 @@ class StudentService(
                 cpf = cpf,
                 birthDate = birthDate,
                 phone = phone,
-                plan = plan,
+                plan = planType,
                 weight = weight,
                 height = height
             )
@@ -100,8 +89,7 @@ class StudentService(
     }
 
     override fun findByPlan(planType: String): List<Student> {
-        val plan = EnumMappers.toPlanDomain(planType)
-        return studentRepository.findByPlan(plan)
+        return studentRepository.findByPlan(planType)
     }
 
     override fun findAllActive(): List<Student> {
@@ -125,20 +113,18 @@ class StudentService(
             throw EmailAlreadyRegisteredException(email)
         }
         
-        val plan = EnumMappers.toPlanDomain(planType)
-        val updatedStudent = student.update(name, email, phone, plan, weight, height)
+        val updatedStudent = student.update(name, email, phone, planType, weight, height)
         .withProfileUrl(profileUrl)
         return studentRepository.save(updatedStudent)
     }
 
     override fun changePlan(id: UserId, planType: String): Student {
         val student = findById(id)
-        val plan = EnumMappers.toPlanDomain(planType)
         val updatedStudent = student.update(
             name = student.name,
             email = student.email,
             phone = student.phone,
-            plan = plan,
+            plan = planType,
             weight = student.weight,
             height = student.height
         )

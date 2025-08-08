@@ -12,7 +12,7 @@ class Student internal constructor(
     val cpf: String,
     val birthDate: LocalDate,
     val phone: String,
-    val plan: StudentPlan,
+    val plan: String,
     val weight: Double?,         // Peso em kg (opcional)
     val height: Int?,            // Altura em cm (opcional)
     val active: Boolean,
@@ -21,7 +21,6 @@ class Student internal constructor(
     val profileUrl: String?
 ) {
     companion object {
-        private val CPF_REGEX = Regex("^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$")
         private val EMAIL_REGEX = Regex("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
         private val PHONE_REGEX = Regex("^\\(\\d{2}\\)\\s\\d{4,5}-\\d{4}$")
         
@@ -32,7 +31,7 @@ class Student internal constructor(
             cpf: String,
             birthDate: LocalDate,
             phone: String,
-            plan: StudentPlan,
+            plan: String,
             weight: Double?,
             height: Int?,
             active: Boolean,
@@ -62,14 +61,13 @@ class Student internal constructor(
             cpf: String,
             birthDate: LocalDate,
             phone: String,
-            plan: StudentPlan,
+            plan: String,
             weight: Double? = null,   
             height: Int? = null
         ): Student {
             // Validações de domínio
             require(name.isNotBlank()) { "Name cannot be blank" }
             require(email.matches(EMAIL_REGEX)) { "Invalid email format" }
-            require(cpf.matches(CPF_REGEX)) { "Invalid CPF format" }
             require(phone.matches(PHONE_REGEX)) { "Invalid phone format" }
             require(birthDate.isBefore(LocalDate.now().minusYears(12))) { "Student must be at least 12 years old" }
 
@@ -93,7 +91,7 @@ class Student internal constructor(
                 plan = plan,
                 weight = weight,
                 height = height,
-                active = true,
+                active = false,
                 registrationDate = now,
                 lastUpdateDate = now,
                 profileUrl = null 
@@ -106,7 +104,7 @@ class Student internal constructor(
             cpf: String,
             birthDate: LocalDate,
             phone: String,
-            plan: StudentPlan,
+            plan: String,
             weight: Double? = null,
             height: Int? = null,
             registrationDate: LocalDateTime
@@ -152,7 +150,7 @@ class Student internal constructor(
         name: String,
         email: String,
         phone: String,
-        plan: StudentPlan,
+        plan: String,
         weight: Double? = this.weight,
         height: Int? = this.height
     ): Student {

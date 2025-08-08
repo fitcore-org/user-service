@@ -2,7 +2,6 @@ package com.fitcore.users.domain.port.`in`.student
 
 import com.fitcore.users.domain.model.common.UserId
 import com.fitcore.users.domain.model.student.Student
-import com.fitcore.users.domain.model.student.StudentPlan
 import java.time.LocalDate
 import java.time.LocalDateTime
 

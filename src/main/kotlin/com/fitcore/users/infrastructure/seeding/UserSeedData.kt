@@ -1,7 +1,6 @@
 package com.fitcore.users.infrastructure.seeding
 
 import com.fitcore.users.domain.model.student.Student
-import com.fitcore.users.domain.model.student.StudentPlan
 import com.fitcore.users.domain.model.employee.Employee
 import com.fitcore.users.domain.model.employee.Role
 import org.springframework.stereotype.Component
@@ -18,6 +17,19 @@ class UserSeedData {
     fun getStudents(): List<Student> {
         val students = mutableListOf<Student>()
         val today = LocalDate.of(2025, Month.JULY, 18)
+
+        // Add specific predefined student
+        students.add(Student.createWithRegistrationDate(
+            name = "Victor Conde",
+            email = "fitcore@fitcore.com",
+            cpf = "12345678900",
+            birthDate = LocalDate.of(2000, 4, 15),
+            phone = "(11) 99999-0005",
+            plan = "Plano Mensal",
+            weight = 75.0,
+            height = 175,
+            registrationDate = today.minusMonths(1).atTime(10, 30)
+        ))
 
         val registrationsPerMonth = mapOf(
             5 to 12, 4 to 13, 3 to 7, 2 to 8, 1 to 15, 0 to 5
@@ -36,7 +48,7 @@ class UserSeedData {
                     cpf = generateValidCpf(formatted = true),
                     birthDate = LocalDate.of(1990 + (studentIndex % 15), (studentIndex % 12) + 1, (studentIndex % 28) + 1),
                     phone = "(11) 91234-${String.format("%04d", studentIndex + 1)}",
-                    plan = if (studentIndex % 3 == 0) StudentPlan.PREMIUM else StudentPlan.BASIC,
+                    plan = "Plano Mensal",
                     weight = Random.nextDouble(55.0, 95.0),
                     height = Random.nextInt(155, 190),
                     registrationDate = registrationDateTime
@@ -50,6 +62,46 @@ class UserSeedData {
     fun getEmployees(): List<Employee> {
         val employees = mutableListOf<Employee>()
         var employeeIndex = 0
+
+        // Add specific predefined employees
+        employees.addAll(listOf(
+            Employee.create(
+                name = "Maria da Silva",
+                email = "cleaner@example.com",
+                cpf = generateValidCpf(formatted = true),
+                birthDate = LocalDate.of(1985, 3, 10),
+                phone = "(11) 99999-0001",
+                role = Role.CLEANER,
+                hireDate = LocalDate.now().minusMonths(6)
+            ),
+            Employee.create(
+                name = "Carlos P. Trainer",
+                email = "trainer@example.com",
+                cpf = generateValidCpf(formatted = true),
+                birthDate = LocalDate.of(1988, 7, 22),
+                phone = "(11) 99999-0002",
+                role = Role.PERSONAL_TRAINER,
+                hireDate = LocalDate.now().minusMonths(12)
+            ),
+            Employee.create(
+                name = "Ana Recepcionista",
+                email = "receptionist@example.com",
+                cpf = generateValidCpf(formatted = true),
+                birthDate = LocalDate.of(1992, 11, 5),
+                phone = "(11) 99999-0003",
+                role = Role.RECEPTIONIST,
+                hireDate = LocalDate.now().minusMonths(8)
+            ),
+            Employee.create(
+                name = "Fernanda Gerente",
+                email = "manager@example.com",
+                cpf = generateValidCpf(formatted = true),
+                birthDate = LocalDate.of(1980, 1, 15),
+                phone = "(11) 99999-0004",
+                role = Role.MANAGER,
+                hireDate = LocalDate.now().minusMonths(24)
+            )
+        ))
 
         val roleDistribution = mapOf(
             Role.MANAGER to 2,

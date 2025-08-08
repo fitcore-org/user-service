@@ -2,9 +2,7 @@ package com.fitcore.users.infrastructure.persistence.mapper
 
 import com.fitcore.users.domain.model.common.UserId
 import com.fitcore.users.domain.model.student.Student
-import com.fitcore.users.domain.model.student.StudentPlan
 import com.fitcore.users.infrastructure.persistence.entity.StudentJpaEntity
-import com.fitcore.users.infrastructure.util.EnumMappers
 import org.springframework.stereotype.Component
 
 @Component

@@ -2,12 +2,10 @@ package com.fitcore.users.infrastructure.persistence.adapter
 
 import com.fitcore.users.domain.model.common.UserId
 import com.fitcore.users.domain.model.student.Student
-import com.fitcore.users.domain.model.student.StudentPlan
 import com.fitcore.users.domain.port.out.student.StudentRepository
 import com.fitcore.users.infrastructure.persistence.entity.StudentJpaEntity
 import com.fitcore.users.infrastructure.persistence.mapper.StudentPersistenceMapper
 import com.fitcore.users.infrastructure.persistence.repository.StudentJpaRepository
-import com.fitcore.users.infrastructure.util.EnumMappers
 import org.springframework.stereotype.Component
 
 @Component
@@ -36,7 +34,7 @@ class StudentPersistenceAdapter(
         return studentJpaRepository.findByCpf(cpf)?.let { mapper.toDomain(it) }
     }
     
-    override fun findByPlan(plan: StudentPlan): List<Student> {
+    override fun findByPlan(plan: String): List<Student> {
         return studentJpaRepository.findByPlan(plan).map { mapper.toDomain(it) }
     }
     

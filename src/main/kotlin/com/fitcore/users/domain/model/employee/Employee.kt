@@ -21,7 +21,6 @@ class Employee private constructor(
     val profileUrl: String?
 ) {
     companion object {
-        private val CPF_REGEX = Regex("^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$")
         private val EMAIL_REGEX = Regex("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")
         private val PHONE_REGEX = Regex("^\\(\\d{2}\\)\\s\\d{4,5}-\\d{4}$")
         
@@ -69,7 +68,6 @@ class Employee private constructor(
             // Validações de domínio
             require(name.isNotBlank()) { "Name cannot be blank" }
             require(email.matches(EMAIL_REGEX)) { "Invalid email format" }
-            require(cpf.matches(CPF_REGEX)) { "Invalid CPF format" }
             require(phone.matches(PHONE_REGEX)) { "Invalid phone format" }
             require(birthDate.isBefore(LocalDate.now().minusYears(18))) { "Employee must be at least 18 years old" }
             require(!hireDate.isAfter(LocalDate.now())) { "Hire date cannot be in the future" }

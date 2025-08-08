@@ -42,7 +42,7 @@ class DataSeeder(
                         cpf = student.cpf,
                         birthDate = student.birthDate,
                         phone = student.phone,
-                        planType = student.plan.name,
+                        planType = student.plan,
                         weight = student.weight,
                         height = student.height,
                         registrationDate = student.registrationDate
