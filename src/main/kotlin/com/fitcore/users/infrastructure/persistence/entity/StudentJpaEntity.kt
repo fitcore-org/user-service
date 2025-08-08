@@ -1,6 +1,5 @@
 package com.fitcore.users.infrastructure.persistence.entity
 
-import com.fitcore.users.domain.model.student.StudentPlan 
 import jakarta.persistence.*
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -27,9 +26,8 @@ class StudentJpaEntity(
     @Column(nullable = false)
     val phone: String,
     
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    val plan: StudentPlan,
+    val plan: String,
     
     @Column
     val weight: Double?,

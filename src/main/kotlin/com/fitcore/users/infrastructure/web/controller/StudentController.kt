@@ -61,7 +61,7 @@ class StudentController(
             name = student.name,
             email = student.email,
             phone = student.phone,
-            planType = student.plan.name,
+            planType = student.plan,
             weight = student.weight,
             height = student.height,
             profileUrl = objectKey 
@@ -93,7 +93,7 @@ class StudentController(
             name = student.name,
             email = student.email,
             phone = student.phone,
-            planType = student.plan.name,
+            planType = student.plan,
             weight = student.weight,
             height = student.height,
             profileUrl = objectKey
@@ -118,7 +118,7 @@ class StudentController(
                 name = student.name,
                 email = student.email,
                 phone = student.phone,
-                planType = student.plan.name,
+                planType = student.plan,
                 weight = student.weight,
                 height = student.height,
                 profileUrl = null // Define como null para remover a referência

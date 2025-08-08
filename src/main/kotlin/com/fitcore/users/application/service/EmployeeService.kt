@@ -7,7 +7,6 @@ import com.fitcore.users.domain.port.`in`.employee.ManageEmployeeUseCase
 import com.fitcore.users.domain.port.out.employee.EmployeeRepository
 import com.fitcore.users.domain.port.out.employee.event.EmployeeEventPublisher
 import com.fitcore.users.infrastructure.util.EnumMappers
-import com.fitcore.users.application.exception.CpfAlreadyRegisteredException
 import com.fitcore.users.application.exception.EmailAlreadyRegisteredException
 import com.fitcore.users.application.exception.EmployeeNotFoundException
 import org.springframework.stereotype.Service
@@ -31,11 +30,6 @@ class EmployeeService(
         // Verificar se email já existe
         if (employeeRepository.findByEmail(email) != null) {
             throw EmailAlreadyRegisteredException(email)
-        }
-        
-        // Verificar se CPF já existe
-        if (employeeRepository.findByCpf(cpf) != null) {
-            throw CpfAlreadyRegisteredException(cpf)
         }
         
         // Converter string do role para enum

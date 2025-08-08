@@ -7,7 +7,6 @@ import java.io.Serializable
 import java.time.LocalDate
 import com.fitcore.users.application.service.StudentService
 import com.fitcore.users.application.service.EmployeeService
-import com.fitcore.users.domain.model.student.StudentPlan
 import com.fitcore.users.domain.model.employee.Role
 import com.fitcore.users.domain.model.common.UserId
 import org.slf4j.LoggerFactory
@@ -51,7 +50,7 @@ class UserEventConsumer(
     //                    cpf = formatCpf(event.cpf),
     //                    birthDate = event.birthDate?.let { LocalDate.parse(it) } ?: LocalDate.of(2000, 1, 1),
     //                    phone = formatPhone(event.phone),
-    //                    planType = StudentPlan.BASIC.name,
+    //                    planType = "BASIC",
     //                    weight = null,
     //                    height = null
     //                )

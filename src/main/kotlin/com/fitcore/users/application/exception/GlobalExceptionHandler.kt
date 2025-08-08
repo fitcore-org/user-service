@@ -49,11 +49,6 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
     fun handleEmailConflict(ex: EmailAlreadyRegisteredException, request: WebRequest): ResponseEntity<Any> =
         buildErrorResponse(HttpStatus.CONFLICT, ex.message ?: "E-mail already exists.")
 
-    // 409 - Conflict (CPF)
-    @ExceptionHandler(CpfAlreadyRegisteredException::class)
-    fun handleCpfConflict(ex: CpfAlreadyRegisteredException, request: WebRequest): ResponseEntity<Any> =
-        buildErrorResponse(HttpStatus.CONFLICT, ex.message ?: "CPF already exists.")
-
     // 422 - Unprocessable Entity: Bean validation error
     override fun handleMethodArgumentNotValid(
         ex: MethodArgumentNotValidException,

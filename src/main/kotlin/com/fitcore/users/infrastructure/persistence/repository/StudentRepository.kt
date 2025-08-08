@@ -1,6 +1,5 @@
 package com.fitcore.users.infrastructure.persistence.repository
 
-import com.fitcore.users.domain.model.student.StudentPlan
 import com.fitcore.users.infrastructure.persistence.entity.StudentJpaEntity
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
@@ -11,5 +10,5 @@ interface StudentJpaRepository : JpaRepository<StudentJpaEntity, UUID> {
     fun findByEmail(email: String): StudentJpaEntity?
     fun findByCpf(cpf: String): StudentJpaEntity?
     fun findByActive(active: Boolean): List<StudentJpaEntity>
-    fun findByPlan(plan: StudentPlan): List<StudentJpaEntity>
+    fun findByPlan(plan: String): List<StudentJpaEntity>
 }

@@ -4,9 +4,6 @@ package com.fitcore.users.application.exception
 class EmailAlreadyRegisteredException(email: String) : 
     RuntimeException("E-mail $email already registered")
 
-class CpfAlreadyRegisteredException(cpf: String) : 
-    RuntimeException("CPF $cpf already registered")
-
 class StudentNotFoundException(id: String) : 
     RuntimeException("Student with ID $id not found")
 
